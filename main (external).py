@@ -136,24 +136,14 @@ def predicto():
     else:
         img_check = "png"
 
-    print("space_beer_uploads: ")
-    bucket_name = 'space_beer_uploads'
-    bucket = storage_client.get_bucket(bucket_name)
-    blob = bucket.blob("space_beer/upload_folder/upload_" + str(now) + "." + img_check)
-    blob.upload_from_string(decoded, content_type='image/' + img_check)
-
     #Convert decoded into Tensor
     image = tf.image.decode_image(decoded, channels=3)
-
     #Convert to Float
     image = tf.image.convert_image_dtype(image, tf.float32)
-
     #Resize Tensor
     image = tf.image.resize(image, [224, 224])
-
     #Expanding (1, 224, 224, 3)
     processed_image = np.expand_dims(image, axis=0)
-
     preds = model_base.predict(processed_image)
 
     from keras.applications.mobilenet_v2 import decode_predictions
